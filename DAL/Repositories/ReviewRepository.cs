@@ -83,9 +83,35 @@ namespace DAL.Repositories
             }
         }
 
-        public Task<string> SetReview(Review review)
+        public async Task<string> SetReview(Review review)
         {
-            throw new NotImplementedException();
+            try
+            {
+                const string storeProcedureName = "Review_Set";
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var param = new DynamicParameters();
+                    param.Add("@Id", review.Id);
+                    param.Add("@ParentId", review.ParentId);
+                    param.Add("@Created", review.Created);
+                    param.Add("@UserName", review.UserName);
+                    param.Add("@Comment", review.Comment);
+                    param.Add("@IsFavourite", review.IsFavourite);
+                    param.Add("@Time", review.Time);
+                    param.Add("@Star", review.Star);
+                    param.Add("@CompanyId", review.CompanyId);
+                    param.Add("@Favourite", review.Favourite);
+                    param.Add("@OutputRequestId", "", DbType.String, ParameterDirection.InputOutput);
+                    var result = await connection.ExecuteAsync(storeProcedureName, param, commandType: CommandType.StoredProcedure);
+                    return param.Get<string>("@OutputRequestId");
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.StackTrace);
+                throw ex;
+            }
         }
     }
 }

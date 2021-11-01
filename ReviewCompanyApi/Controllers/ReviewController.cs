@@ -51,7 +51,7 @@ namespace ReviewCompanyApi.Controllers
         }
 
         [HttpPost]
-        public async Task<BaseResponse<string>> SetBank([FromBody] Review review)
+        public async Task<BaseResponse<string>> SetReview([FromBody] Review review)
         {
             try
             {

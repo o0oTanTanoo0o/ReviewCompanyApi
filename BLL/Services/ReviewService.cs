@@ -49,7 +49,15 @@ namespace BLL.Services
 
         public Task<string> SetReview(Review review)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return this._reviewRepository.SetReview(review);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.StackTrace);
+                throw ex;
+            }
         }
     }
 }

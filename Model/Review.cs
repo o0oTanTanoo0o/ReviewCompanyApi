@@ -15,6 +15,7 @@ namespace Model
         public string Time { set; get; }
         public string Star { set; get; }
         public int CompanyId { set; get; }
+        public int Favourite { set; get; }
         public List<Review> Replies { set; get; }
     }
 
