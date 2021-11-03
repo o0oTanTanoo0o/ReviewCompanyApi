@@ -66,7 +66,11 @@ namespace DAL.Repositories
                     param.Add("@pageSize", filter.pageSize);
                     param.Add("@total", 0, DbType.Int32, ParameterDirection.InputOutput);
                     param.Add("@totalFiltered", 0, DbType.Int32, ParameterDirection.InputOutput);
-                    var reviewAll = connection.Query<Review>(storeProcedureName, param, commandType: CommandType.StoredProcedure);
+                    var response = connection.QueryMultiple(storeProcedureName, param, commandType: CommandType.StoredProcedure);
+
+                    var ratingPercent = response.Read<List<float>>().ToList();
+
+                    var reviewAll = response.Read<Review>().ToList();
                     var reviews = reviewAll.Where(review => review.ParentId == null).ToList();
                     foreach(Review review in reviews)
                     {
@@ -99,7 +103,7 @@ namespace DAL.Repositories
                     param.Add("@Comment", review.Comment);
                     param.Add("@IsFavourite", review.IsFavourite);
                     param.Add("@Time", review.Time);
-                    param.Add("@Star", review.Star);
+                    param.Add("@Rating", review.Rating);
                     param.Add("@CompanyId", review.CompanyId);
                     param.Add("@Favourite", review.Favourite);
                     param.Add("@OutputRequestId", "", DbType.String, ParameterDirection.InputOutput);

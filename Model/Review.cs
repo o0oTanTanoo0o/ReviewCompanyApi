@@ -13,7 +13,7 @@ namespace Model
         public string Comment { set; get; }
         public string IsFavourite { set; get; }
         public string Time { set; get; }
-        public string Star { set; get; }
+        public int Rating { set; get; }
         public int CompanyId { set; get; }
         public int Favourite { set; get; }
         public List<Review> Replies { set; get; }
