@@ -51,7 +51,7 @@ namespace DAL.Repositories
             throw new NotImplementedException();
         }
 
-        public ResponseList<IEnumerable<Review>> GetReviews(FilterReview filter)
+        public ResponseList<ReviewDetail> GetReviews(FilterReview filter)
         {
             try
             {
@@ -68,7 +68,6 @@ namespace DAL.Repositories
                     param.Add("@totalFiltered", 0, DbType.Int32, ParameterDirection.InputOutput);
                     var response = connection.QueryMultiple(storeProcedureName, param, commandType: CommandType.StoredProcedure);
 
-                    var ratingPercent = response.Read<List<float>>().ToList();
 
                     var reviewAll = response.Read<Review>().ToList();
                     var reviews = reviewAll.Where(review => review.ParentId == null).ToList();
@@ -76,8 +75,11 @@ namespace DAL.Repositories
                     {
                         review.Replies = reviewAll.Where(t => t.ParentId == review.Id).ToList();
                     }
-                    var result = new ResponseList<IEnumerable<Review>>(reviews, param.Get<int>("@total"), param.Get<int>("@totalFiltered"));
-                    return result;
+
+                    var ratingPercent = response.Read<decimal>().ToList();
+
+                    var result = new ReviewDetail() { Review = reviews, RatingsAverage = ratingPercent };
+                    return new ResponseList<ReviewDetail>(result, param.Get<int>("@total"), param.Get<int>("@totalFiltered")); ;
                 }
             }
             catch (Exception ex)

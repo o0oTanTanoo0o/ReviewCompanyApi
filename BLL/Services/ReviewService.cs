@@ -34,7 +34,7 @@ namespace BLL.Services
             throw new NotImplementedException();
         }
 
-        public ResponseList<IEnumerable<Review>> GetReviews(FilterReview filter)
+        public ResponseList<ReviewDetail> GetReviews(FilterReview filter)
         {
             try
             {

@@ -22,16 +22,16 @@ namespace ReviewCompanyApi.Controllers
         }
 
         [HttpGet]
-        public BaseResponse<ResponseList<IEnumerable<Review>>> GetReview([FromQuery] FilterReview search)
+        public BaseResponse<ResponseList<ReviewDetail>> GetReview([FromQuery] FilterReview search)
         {
             try
             {
-                ResponseList<IEnumerable<Review>> result = _reviewService.GetReviews(search);
-                return new BaseResponse<ResponseList<IEnumerable<Review>>>(ApiResult.Success, result, null);
+                ResponseList<ReviewDetail> result = _reviewService.GetReviews(search);
+                return new BaseResponse<ResponseList<ReviewDetail>>(ApiResult.Success, result, null);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<ResponseList<IEnumerable<Review>>>(ApiResult.Success, null, ex.Message, ex.Message);
+                return new BaseResponse<ResponseList<ReviewDetail>>(ApiResult.Success, null, ex.Message, ex.Message);
             }
         }
 
