@@ -29,6 +29,19 @@ namespace BLL.Services
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Review> GetRecentReviews(int quantity)
+        {
+            try
+            {
+                return this._reviewRepository.GetRecentReviews(quantity);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+        }
+
         public Task<Review> GetReviewById(string id)
         {
             throw new NotImplementedException();

@@ -36,6 +36,20 @@ namespace ReviewCompanyApi.Controllers
         }
 
         [HttpGet]
+        public BaseResponse<IEnumerable<Review>> GetRecentReview([FromQuery] int quantity)
+        {
+            try
+            {
+                IEnumerable<Review> result = _reviewService.GetRecentReviews(quantity);
+                return new BaseResponse<IEnumerable<Review>>(ApiResult.Success, result, null);
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<IEnumerable<Review>>(ApiResult.Success, null, ex.Message, ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("{id}")]
         public async Task<BaseResponse<Review>> GetReviewById(string id)
         {

@@ -67,17 +67,13 @@ namespace DAL.Repositories
                     param.Add("@total", 0, DbType.Int32, ParameterDirection.InputOutput);
                     param.Add("@totalFiltered", 0, DbType.Int32, ParameterDirection.InputOutput);
                     var response = connection.QueryMultiple(storeProcedureName, param, commandType: CommandType.StoredProcedure);
-
-
                     var reviewAll = response.Read<Review>().ToList();
                     var reviews = reviewAll.Where(review => review.ParentId == null).ToList();
                     foreach(Review review in reviews)
                     {
                         review.Replies = reviewAll.Where(t => t.ParentId == review.Id).ToList();
                     }
-
                     var ratingPercent = response.Read<decimal>().ToList();
-
                     var result = new ReviewDetail() { Review = reviews, RatingsAverage = ratingPercent };
                     return new ResponseList<ReviewDetail>(result, param.Get<int>("@total"), param.Get<int>("@totalFiltered")); ;
                 }
@@ -88,6 +84,29 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+
+
+        public IEnumerable<Review> GetRecentReviews(int quantity)
+        {
+            try
+            {
+                const string storeProcedureName = "Review_Get_Recent";
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var param = new DynamicParameters();
+                    param.Add("@quantity", quantity);
+                    var reviews = connection.Query<Review>(storeProcedureName, param, commandType: CommandType.StoredProcedure);
+                    return reviews;
+                }
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.StackTrace);
+                throw ex;
+            }
+        }
+
 
         public async Task<string> SetReview(Review review)
         {
