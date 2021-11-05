@@ -35,7 +35,7 @@ namespace ReviewCompanyApi.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetRecentReview")]
         public BaseResponse<IEnumerable<Review>> GetRecentReview([FromQuery] int quantity)
         {
             try
